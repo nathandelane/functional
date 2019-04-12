@@ -1,6 +1,6 @@
 areEqual = (x, y) => { return x == y; }
 isGreater = (x, y) => { return x > y; }
-isLess = (x, y) => { return x < y' }
+isLess = (x, y) => { return x < y; }
 not = (x) => { return !x; }
 length = (str) => { return (str && str.length) || 0; }
 defaultValue = (x, def) => { return present(x) && x || def; }
@@ -23,3 +23,9 @@ concatArray = (arrX, arrY) => { return arrX.concat(arrY); }
 
 // bubbleSort = (arrX, firstIndex) => { return (arrayLength(arrX) > 1) || arrX; }
 // sort = (arrX, firstIndex) => { return isGreater(arrX[firstIndex], arrX[(firstIndex + 1)]) ? sort(concatArray(swap(sliceArray(arrX, 0, 2)), sliceArray(arrX, 2, undefined)), firsstIndex + 1) : arrX; }
+
+sortPairs = ([x, y]) => { return conditional(isGreater(x, y), swap([x, y]), [x, y]); }
+
+sort = (arr) => { return conditional((present(arr) && isArray(arr) && arrayLength(arr) > 1), sortPairs(arr), arr); }
+
+sortByPairs = (arr, p) => { return conditional(arrayLength(arr) >= p, arr, sortByPairs(concatArray(sliceArray(arr, 0, p), sortPairs(sliceArray(arr, p, 2)))));  }
