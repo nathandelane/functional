@@ -59,13 +59,13 @@ sortByPairs = (arr, p, acc) => {
   );
 }
 
-sorting (array, pointer, accumulator):
-  0. if accumulator is null initialize it as []
-  1. if array size = 1 then return
-  2. if array size > 1 then sort by pairs:
-    [x, y] = x > y ? [y, x] : [x, y]
-  3. Add x to accumulator: concatArray(accumulator, [x])
-  4. increment p
+// sorting (array, pointer, accumulator):
+  // 0. if accumulator is null initialize it as []
+  // 1. if array size = 1 then return
+  // 2. if array size > 1 then sort by pairs:
+  //   [x, y] = x > y ? [y, x] : [x, y]
+  // 3. Add x to accumulator: concatArray(accumulator, [x])
+  // 4. increment p
 
 sortByPairs = (arr, p, acc) => {
   if (not(acc)) {
