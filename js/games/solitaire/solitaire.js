@@ -1,12 +1,12 @@
 function Card(suit, face, valueOfCard) {
 
-    let card = Object.create(Card.prototype)
+    let card = Object.create(Card.prototype);
     
-    card.suit = suit
+    card.suit = suit;
     
-    card.face = face
+    card.face = face;
 
-    card.valueOfCard = valueOfCard
+    card.valueOfCard = valueOfCard;
 
     return card;
 }
@@ -21,7 +21,7 @@ Card.prototype.compareTo = function (otherCard) {
 
 function DeckOfCards() {
 
-    let deckOfCards = Object.create(DeckOfCards.prototype)
+    let deckOfCards = Object.create(DeckOfCards.prototype);
 
     deckOfCards.currentIndex = -1;
 
