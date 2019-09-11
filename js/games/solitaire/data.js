@@ -1,23 +1,75 @@
+function Data() { }
+
+Data.getBackgroundImagePath = () => {
+    return "./solitaire-board_640x480.png";
+}
+
+Data.getDefaultDeckOfCards = () => {
+    return [
+        { "suit": "Spades", "face": "A", "valueOfCard": 1 },
+        { "suit": "Spades", "face": "2", "valueOfCard": 2 },
+        { "suit": "Spades", "face": "3", "valueOfCard": 3 },
+        { "suit": "Spades", "face": "4", "valueOfCard": 4 },
+        { "suit": "Spades", "face": "5", "valueOfCard": 5 },
+        { "suit": "Spades", "face": "6", "valueOfCard": 6 },
+        { "suit": "Spades", "face": "7", "valueOfCard": 7 },
+        { "suit": "Spades", "face": "8", "valueOfCard": 8 },
+        { "suit": "Spades", "face": "9", "valueOfCard": 9 },
+        { "suit": "Spades", "face": "10", "valueOfCard": 10 },
+        { "suit": "Spades", "face": "J", "valueOfCard": 11 },
+        { "suit": "Spades", "face": "Q", "valueOfCard": 12 },
+        { "suit": "Spades", "face": "K", "valueOfCard": 13 },
+        { "suit": "Clubs", "face": "A", "valueOfCard": 1 },
+        { "suit": "Clubs", "face": "2", "valueOfCard": 2 },
+        { "suit": "Clubs", "face": "3", "valueOfCard": 3 },
+        { "suit": "Clubs", "face": "4", "valueOfCard": 4 },
+        { "suit": "Clubs", "face": "5", "valueOfCard": 5 },
+        { "suit": "Clubs", "face": "6", "valueOfCard": 6 },
+        { "suit": "Clubs", "face": "7", "valueOfCard": 7 },
+        { "suit": "Clubs", "face": "8", "valueOfCard": 8 },
+        { "suit": "Clubs", "face": "9", "valueOfCard": 9 },
+        { "suit": "Clubs", "face": "10", "valueOfCard": 10 },
+        { "suit": "Clubs", "face": "J", "valueOfCard": 11 },
+        { "suit": "Clubs", "face": "Q", "valueOfCard": 12 },
+        { "suit": "Clubs", "face": "K", "valueOfCard": 13 },
+        { "suit": "Hearts", "face": "A", "valueOfCard": 1 },
+        { "suit": "Hearts", "face": "2", "valueOfCard": 2 },
+        { "suit": "Hearts", "face": "3", "valueOfCard": 3 },
+        { "suit": "Hearts", "face": "4", "valueOfCard": 4 },
+        { "suit": "Hearts", "face": "5", "valueOfCard": 5 },
+        { "suit": "Hearts", "face": "6", "valueOfCard": 6 },
+        { "suit": "Hearts", "face": "7", "valueOfCard": 7 },
+        { "suit": "Hearts", "face": "8", "valueOfCard": 8 },
+        { "suit": "Hearts", "face": "9", "valueOfCard": 9 },
+        { "suit": "Hearts", "face": "10", "valueOfCard": 10 },
+        { "suit": "Hearts", "face": "J", "valueOfCard": 11 },
+        { "suit": "Hearts", "face": "Q", "valueOfCard": 12 },
+        { "suit": "Hearts", "face": "K", "valueOfCard": 13 },
+        { "suit": "Diamonds", "face": "A", "valueOfCard": 1 },
+        { "suit": "Diamonds", "face": "2", "valueOfCard": 2 },
+        { "suit": "Diamonds", "face": "3", "valueOfCard": 3 },
+        { "suit": "Diamonds", "face": "4", "valueOfCard": 4 },
+        { "suit": "Diamonds", "face": "5", "valueOfCard": 5 },
+        { "suit": "Diamonds", "face": "6", "valueOfCard": 6 },
+        { "suit": "Diamonds", "face": "7", "valueOfCard": 7 },
+        { "suit": "Diamonds", "face": "8", "valueOfCard": 8 },
+        { "suit": "Diamonds", "face": "9", "valueOfCard": 9 },
+        { "suit": "Diamonds", "face": "10", "valueOfCard": 10 },
+        { "suit": "Diamonds", "face": "J", "valueOfCard": 11 },
+        { "suit": "Diamonds", "face": "Q", "valueOfCard": 12 },
+        { "suit": "Diamonds", "face": "K", "valueOfCard": 13 }
+    ];
+}
+
 function loadDeckOfCards () {
-    const initialDeckCsv = "Spades,ace,1\nSpades,2,2\nSpades,3,3\nSpades,4,4\nSpades,5,5\nSpades,6,6\nSpades,7,7\n"
-        + "Spades,8,8\nSpades,9,9\nSpades,10,10\nSpades,J,11\nSpades,Q,12\nSpades,K,13\nClubs,ace,1\nClubs,2,2\nClubs,3,3\n"
-        + "Clubs,4,4\nClubs,5,5\nClubs,6,6\nClubs,7,7\nClubs,8,8\nClubs,9,9\nClubs,10,10\nClubs,J,11\nClubs,Q,12\nClubs,K,13\n"
-        + "Hearts,ace,1\nHearts,2,2\nHearts,3,3\nHearts,4,4\nHearts,5,5\nHearts,6,6\nHearts,7,7\nHearts,8,8\nHearts,9,9\n"
-        + "Hearts,10,10\nHearts,J,11\nHearts,Q,12\nHearts,K,13\nDiamonds,ace,1\nDiamonds,2,2\nDiamonds,3,3\nDiamonds,4,4\n"
-        + "Diamonds,5,5\nDiamonds,6,6\nDiamonds,7,7\nDiamonds,8,8\nDiamonds,9,9\nDiamonds,10,10\nDiamonds,J,11\nDiamonds,Q,12\nDiamonds,K,13";
-    
-    var lines = initialDeckCsv.split("\n");
+    let cardData = Data.getDefaultDeckOfCards();
 
     var cards = new Array();
 
-    for (var i = 0; i < lines.length; i++) {
-        var nextLine = lines[i];
-        var csvOfLine = nextLine.split(",");
-        var suit = csvOfLine[0];
-        var face = csvOfLine[1];
-        var valueOfCard = csvOfLine[2];
+    for (var i = 0; i < cardData.length; i++) {
+        var nextCardData = cardData[i];
 
-        let nextCard = new Card(suit, face, valueOfCard);
+        let nextCard = new Card(nextCardData);
 
         cards.push(nextCard);
     }

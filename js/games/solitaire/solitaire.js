@@ -1,12 +1,12 @@
-function Card(suit, face, valueOfCard) {
+function Card(cardData) {
 
     let card = Object.create(Card.prototype);
     
-    card.suit = suit;
+    card.suit = cardData.suit;
     
-    card.face = face;
+    card.face = cardData.face;
 
-    card.valueOfCard = valueOfCard;
+    card.valueOfCard = cardData.valueOfCard;
 
     return card;
 }

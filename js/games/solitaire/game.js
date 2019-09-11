@@ -18,7 +18,7 @@ Game.prototype.draw = function () {
 
     var backgroundImage = new Image();
 
-    backgroundImage.src = "./solitaire-board_640x480.png";
+    backgroundImage.src = Data.getBackgroundImagePath();
 
     var c = this.canvas.getContext("2d");
 
