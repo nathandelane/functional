@@ -1,3 +1,3 @@
-const game = new Game();
+const game = new Game(document.getElementById("canvas0"), 640, 480);
 
-game.draw(document.getElementById("canvas0"), 640, 480);
+game.draw();
