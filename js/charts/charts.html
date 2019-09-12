@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Charts</title>
+        <style type="text/css">
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+
+            div.center-div {
+                margin: 0 auto;
+                width: 640px;
+            }
+
+            canvas#canvas0 {
+                border: 0 solid black;
+                background-color: lightgray;
+            }
+
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    </head>
+    <body>
+        <div class="center-div">
+            <canvas id="canvas0"></canvas>
+        </div>
+        <script type="text/javascript">
+            var c = document.getElementById("canvas0").getContext("2d");
+            var chart = new Chart(c, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    datasets: [{
+                        label: 'My First dataset',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+        </script>
+    </body>
+</html>
