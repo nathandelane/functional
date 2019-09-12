@@ -32,6 +32,9 @@ function Ellipse(g2d, centerX, centerY, radiusX, radiusY, color) {
 
 }
 
+/**
+ * Render the Ellipse.
+ */
 Ellipse.prototype.render = function () {
     var step = 2 * Math.PI / 45;
 
@@ -54,7 +57,7 @@ Ellipse.prototype.render = function () {
 }
 
 /**
- * 
+ * Create an Asteroid object.
  * @param {CanvasRenderingContext2D} g2d 
  * @param {object} centerPoint 
  * @param {object} radiusDims 
@@ -89,6 +92,9 @@ function Asteroid(g2d, centerPoint, radiusDims, numberOfSides, color) {
 
 }
 
+/**
+ * Render the Asteroid.
+ */
 Asteroid.prototype.render = function () {
     this.g2d.moveTo(this.centerPoint.x, this.centerPoint.y);
     this.g2d.beginPath();
@@ -112,6 +118,11 @@ Asteroid.prototype.render = function () {
     this.g2d.stroke();
 }
 
+/**
+ * Translate the Asteroid by a difference of diffX and diffY.
+ * @param {number} diffX
+ * @param {number} diffY
+ */
 Asteroid.prototype.translate = function (diffX, diffY) {
     this.centerPoint.x = this.centerPoint.x + diffX;
     this.centerPoint.y = this.centerPoint.y + diffY;
@@ -131,6 +142,10 @@ Asteroid.prototype.translate = function (diffX, diffY) {
     }
 }
 
+/**
+ * Rotate the Asteroid by a number of degrees.
+ * @param {number} degrees
+ */
 Asteroid.prototype.rotate = function (degrees) {
     var radiansToTranslate = degrees * Math.PI / 180;
     var translatedPoints = [];
