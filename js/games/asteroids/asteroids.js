@@ -171,6 +171,92 @@ Asteroid.prototype.rotate = function (degrees) {
     this.steps = translatedPoints.slice(0);
 }
 
+function Ship(g2d, centerPoint, radius, color) {
+
+    let ship = Object.create(Ship.prototype);
+
+    ship.g2d = g2d;
+
+    ship.centerPoint = centerPoint;
+
+    ship.radius = radius;
+
+    ship.steps = [ 0, 14 * Math.PI / 16, 18 * Math.PI / 16 ];
+
+    ship.direction = 0;
+
+    ship.color = color;
+
+    return ship;
+
+}
+
+Ship.prototype.render = function () {
+    this.g2d.moveTo(this.centerPoint.x, this.centerPoint.y);
+    this.g2d.beginPath();
+
+    for (var i = 0; i < this.steps.length; i++) {
+        var theta = this.steps[i];
+
+        var x = this.centerPoint.x + this.radius * Math.cos(theta);
+        var y = this.centerPoint.y + this.radius * Math.sin(theta);
+
+        this.g2d.lineTo(x, y);
+    }
+
+    this.g2d.closePath();
+    this.g2d.strokeStyle = this.color;
+    this.g2d.lineWidth = 1;
+    this.g2d.stroke();
+}
+
+// TODO: Determine how to translate ship in proper direction, perpendicular to tangent of
+// direction.
+Ship.prototype.translate = function (diffX, diffY) {
+    this.centerPoint.x = this.centerPoint.x + diffX;
+    this.centerPoint.y = this.centerPoint.y + diffY;
+
+    if ((this.centerPoint.x - this.radius) > 640) {
+        this.centerPoint.x = 0 - this.radius;
+    }
+    else if ((this.centerPoint.x + this.radius) < 0) {
+        this.centerPoint.x = 640 + this.radius;
+    }
+
+    if ((this.centerPoint.y - this.radius) > 480) {
+        this.centerPoint.y = 0 - this.radius;
+    }
+    else if ((this.centerPoint.y + this.radius) < 0) {
+        this.centerPoint.y = 480 + this.radius;
+    }
+}
+
+Ship.prototype.rotate = function (degrees) {
+    var radiansToTranslate = degrees * Math.PI / 180;
+    var translatedPoints = [];
+
+    for (var i = 0; i < this.steps.length; i++) {
+        var nextPoint = this.steps[i];
+        var calculation = (nextPoint + radiansToTranslate);
+
+        if (calculation > (2 * Math.PI)) {
+            var difference = calculation - (2 * Math.PI);
+
+            calculation = difference;
+        }
+        else if (calculation < 0) {
+            var difference = (2 * Math.PI) + calculation;
+
+            calculation = difference;
+        }
+
+        translatedPoints.push(calculation);
+    }
+
+    this.steps = translatedPoints.slice(0);
+    this.direction = translatedPoints[0];
+}
+
 /////////////////////////////////////////////////////////////////////////
 // Start of application
 const start = (width, height) => {
@@ -207,6 +293,11 @@ gameObjects.push(
         "renderable": new Asteroid(g2d, { "x": 300, "y": 320 }, { "width": 19, "height": 18}, 13, "red"), 
         "translation": { "x": -0.9, "y": 0.2 },
         "rotation": -0.5
+    },
+    {
+        "renderable": new Ship(g2d, { "x": 320, "y": 240 }, 20, "yellow"),
+        "translation": { "x": 0, "y": 0 },
+        "rotation": 0
     }
 );
 
@@ -255,6 +346,23 @@ const loop = () => {
         lastTime = currentTime - (delta % interval);
     }
 }
+
+addEventListener("keydown", function(event) {
+    if (event.keyCode == 37) {
+        var ship = gameObjects[2].renderable;
+        ship.rotate(-10);
+    }
+    else if (event.keyCode == 39) {
+        var ship = gameObjects[2].renderable;
+        ship.rotate(10);
+    }
+    else if (event.keyCode = 38) {
+        var ship = gameObjects[2].renderable;
+    }
+    else {
+        console.log("keycode: " + event.keyCode);
+    }
+});
 
 loop();
 
