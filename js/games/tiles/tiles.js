@@ -31,6 +31,9 @@ Game.prototype.update = function () {
 
 Game.prototype.draw = function () {
     this.g2d.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+
+    var levelOne = new Level1();
+    levelOne.render(this.g2d);
 }
 
 Game.prototype.loop = function () {
@@ -63,6 +66,6 @@ const gameLoop = () => {
 
 /////////////////////////////////////////////////////////////////////////
 // Start of application
-var game = new Game({ "width": 640, "height": 480 }, "black");
+var game = new Game({ "width": 640, "height": 480 }, "black", 30, (1000/30));
 
 gameLoop();
