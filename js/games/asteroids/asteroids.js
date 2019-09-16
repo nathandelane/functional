@@ -274,7 +274,7 @@ Ship.prototype.accelerate = function (acceleration) {
     var addToX = acceleration * this.moment.x;
     var addToY = acceleration * this.moment.y;
 
-    console.log("acceleration: " + acceleration + ", addToX: " + addToX + ", addToY: " + addToY + ", moment: (x: " + this.moment.x + ", y: " + this.moment.y);
+    // console.log("acceleration: " + acceleration + ", addToX: " + addToX + ", addToY: " + addToY + ", moment: (x: " + this.moment.x + ", y: " + this.moment.y);
 
     return { "x": addToX, "y": addToY };
 
@@ -295,9 +295,6 @@ const start = (width, height) => {
 }
 
 var g2d = start(640, 480);
-
-// y = new Ellipse(g2d, 100, 100, 50, 50, "red");
-// y.render();
 
 var fps = 30;
 var interval = 1000/fps;
@@ -329,18 +326,18 @@ gameObjects.push(
 var shipRotationAcceleration = 0;
 var shipMaxPositiveRotationalAcceleration = 5.0;
 var shipMaxNegativeRotationalAcceleration = -5.0;
-var shipRotationalDrag = 0.01;
-var shipRotationalDragPeriod = 1000/30;
-var shipRotationEventKeyDown = false;
+// var shipRotationalDrag = 0.01;
+// var shipRotationalDragPeriod = 1000/30;
+// var shipRotationEventKeyDown = false;
 
 // Horizontal model for ship
 var shipAcceleration = { "x": 0, "y": 0 };
 var shipHorizontalAcceleration = 0;
-var shipMaxHorizontalAcceleration = 5.0;
-var shipMinHorizontalAcceleration = -5.0;
-var shipHorizontalDrag = 0;
-var shipHorizontalDragPeriod = 1000/30;
-var shipHorizontalEventKeyDown = false;
+var shipMaxHorizontalAcceleration = 2.0;
+var shipMinHorizontalAcceleration = -2.0;
+// var shipHorizontalDrag = 0;
+// var shipHorizontalDragPeriod = 1000/30;
+// var shipHorizontalEventKeyDown = false;
 
 var lastUpdateTime = (new Date()).getTime();
 var currentUpdateTime = 0;
@@ -359,19 +356,19 @@ const update = () => {
     }
 
     // Simulate rotational drag...hmm
-    if (!shipRotationEventKeyDown) {
-        currentUpdateTime = (new Date()).getTime();
-        updateDelta = (currentUpdateTime-lastUpdateTime);
+    // if (!shipRotationEventKeyDown) {
+    //     currentUpdateTime = (new Date()).getTime();
+    //     updateDelta = (currentUpdateTime-lastUpdateTime);
   
-        if(updateDelta > shipRotationalDragPeriod) {
-            if (shipRotationAcceleration < 0) {
-                shipRotationAcceleration += shipRotationalDrag
-            }
-            else if (shipRotationAcceleration > 0) {
-                shipRotationAcceleration -= shipRotationalDrag
-            }
-        }
-    }
+    //     if(updateDelta > shipRotationalDragPeriod) {
+    //         if (shipRotationAcceleration < 0) {
+    //             shipRotationAcceleration += shipRotationalDrag
+    //         }
+    //         else if (shipRotationAcceleration > 0) {
+    //             shipRotationAcceleration -= shipRotationalDrag
+    //         }
+    //     }
+    // }
 
     var ship = gameObjects[2].renderable;
     
@@ -418,6 +415,9 @@ addEventListener("keyup", function(event) {
     else if (event.keyCode == 38) { // Up
         shipHorizontalEventKeyDown = false;
     }
+    else if (event.keyCode == 40) { // Down
+        shipHorizontalEventKeyDown = false;
+    }
     else {
         console.log("keycode: " + event.keyCode);
     }
@@ -445,6 +445,19 @@ addEventListener("keydown", function(event) {
 
             shipAcceleration = ship.accelerate(shipHorizontalAcceleration);
         }
+    }
+    else if (event.keyCode == 40) { // Down
+        if (shipHorizontalAcceleration > shipMinHorizontalAcceleration) {
+            shipHorizontalAcceleration -= 0.001;
+            shipHorizontalEventKeyDown = true;
+
+            var ship = gameObjects[2].renderable;
+
+            shipAcceleration = ship.accelerate(shipHorizontalAcceleration);
+        }
+    }
+    else if (event.keyCode == 32) { // Space
+
     }
     else if (event.keyCode == 27) {
         shipRotationAcceleration = 0;
