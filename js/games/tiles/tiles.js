@@ -21,6 +21,8 @@ function Game(dimensions, backgroundColor, fps, interval) {
 
     game.lastRender = 0;
 
+    game.somethingChanged = true;
+
     return game;
 
 }
@@ -30,10 +32,14 @@ Game.prototype.update = function () {
 }
 
 Game.prototype.draw = function () {
-    this.g2d.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+    if (this.somethingChanged) {
+        this.g2d.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
 
-    var levelOne = new Level1();
-    levelOne.render(this.g2d);
+        var levelOne = new Level1();
+        levelOne.render(this.g2d);
+
+        this.somethingChanged = false;
+    }
 }
 
 Game.prototype.loop = function () {
@@ -66,6 +72,6 @@ const gameLoop = () => {
 
 /////////////////////////////////////////////////////////////////////////
 // Start of application
-var game = new Game({ "width": 640, "height": 480 }, "black", 30, (1000/30));
+var game = new Game({ "width": 640, "height": 480 }, "black", 30, (1000/0.5));
 
 gameLoop();
