@@ -301,7 +301,16 @@ gameObjects.push(
     }
 );
 
-// var x = new Asteroid(g2d, { "x": 100, "y": 100 }, { "width": 21, "height": 31}, 11, "gray");
+// Rotation model for ship
+var shipRotationAcceleration = 0;
+var shipMaxPositiveRotationalAcceleration = 5.0;
+var shipMaxNegativeRotationalAcceleration = -5.0;
+var shipRotationalDrag = 0.01;
+var lastUpdateTime = (new Date()).getTime();
+var currentUpdateTime = 0;
+var updateDelta = 0;
+var shipRotationalDragInterval = 1000/30;
+var eventRotationKeyDown = false;
 
 const update = () => {
     for (var i = 0; i < gameObjects.length; i++) {
@@ -313,8 +322,24 @@ const update = () => {
         nextRenderable.translate(nextTranslation.x, nextTranslation.y);
         nextRenderable.rotate(nextRotation);
     }
-    // x.translate(0.7, 0.3);
-    // x.rotate(0.5);
+
+    // Simulate rotational drag...hmm
+    if (!eventRotationKeyDown) {
+        currentUpdateTime = (new Date()).getTime();
+        updateDelta = (currentUpdateTime-lastUpdateTime);
+  
+        if(updateDelta > shipRotationalDragInterval) {
+            if (shipRotationAcceleration < 0) {
+                shipRotationAcceleration += shipRotationalDrag
+            }
+            else if (shipRotationAcceleration > 0) {
+                shipRotationAcceleration -= shipRotationalDrag
+            }
+        }
+    }
+
+    var ship = gameObjects[2].renderable;
+    ship.rotate(shipRotationAcceleration);
 }
 
 const clearCanvas = () => {
@@ -330,11 +355,10 @@ const draw = () => {
 
         nextRenderable.render();
     }
-    // x.render();
 }
 
-const loop = () => {
-    window.requestAnimationFrame(loop);
+const gameLoop = () => {
+    window.requestAnimationFrame(gameLoop);
 
     currentTime = (new Date()).getTime();
     delta = (currentTime-lastTime);
@@ -347,14 +371,30 @@ const loop = () => {
     }
 }
 
-addEventListener("keydown", function(event) {
+addEventListener("keyup", function(event) {
     if (event.keyCode == 37) {
-        var ship = gameObjects[2].renderable;
-        ship.rotate(-10);
+        eventRotationKeyDown = false;
     }
     else if (event.keyCode == 39) {
-        var ship = gameObjects[2].renderable;
-        ship.rotate(10);
+        eventRotationKeyDown = false;
+    }
+    else {
+        console.log("keycode: " + event.keyCode);
+    }
+});
+
+addEventListener("keydown", function(event) {
+    if (event.keyCode == 37) {
+        if (shipRotationAcceleration > shipMaxNegativeRotationalAcceleration) {
+            shipRotationAcceleration -= 0.2;
+            eventRotationKeyDown = true;
+        }
+    }
+    else if (event.keyCode == 39) {
+        if (shipRotationAcceleration < shipMaxPositiveRotationalAcceleration) {
+            shipRotationAcceleration += 0.2;
+            eventRotationKeyDown = true;
+        }
     }
     else if (event.keyCode = 38) {
         var ship = gameObjects[2].renderable;
@@ -364,9 +404,4 @@ addEventListener("keydown", function(event) {
     }
 });
 
-loop();
-
-// y = new Asteroid(g2d, { "x": 200, "y": 200}, { "width": 31, "height": 17}, 11, "gray");
-// y.render();
-// y.translate(30, 50);
-// y.render();
+gameLoop();
