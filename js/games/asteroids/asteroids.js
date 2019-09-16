@@ -332,7 +332,7 @@ var shipMaxNegativeRotationalAcceleration = -5.0;
 
 // Horizontal model for ship
 var shipAcceleration = { "x": 0, "y": 0 };
-var shipHorizontalAcceleration = 0;
+var shipHorizontalAccelerationPower = 0;
 var shipMaxHorizontalAcceleration = 2.0;
 var shipMinHorizontalAcceleration = -2.0;
 // var shipHorizontalDrag = 0;
@@ -414,6 +414,7 @@ addEventListener("keyup", function(event) {
     }
     else if (event.keyCode == 38) { // Up
         shipHorizontalEventKeyDown = false;
+        shipHorizontalAccelerationPower = 0;
     }
     else if (event.keyCode == 40) { // Down
         shipHorizontalEventKeyDown = false;
@@ -437,23 +438,23 @@ addEventListener("keydown", function(event) {
         }
     }
     else if (event.keyCode == 38) { // Up
-        if (shipHorizontalAcceleration < shipMaxHorizontalAcceleration) {
-            shipHorizontalAcceleration += 0.001;
+        if (shipHorizontalAccelerationPower < shipMaxHorizontalAcceleration) {
+            shipHorizontalAccelerationPower += 0.001;
             shipHorizontalEventKeyDown = true;
 
             var ship = gameObjects[2].renderable;
 
-            shipAcceleration = ship.accelerate(shipHorizontalAcceleration);
+            shipAcceleration = ship.accelerate(shipHorizontalAccelerationPower);
         }
     }
     else if (event.keyCode == 40) { // Down
-        if (shipHorizontalAcceleration > shipMinHorizontalAcceleration) {
-            shipHorizontalAcceleration -= 0.001;
+        if (shipHorizontalAccelerationPower > shipMinHorizontalAcceleration) {
+            shipHorizontalAccelerationPower -= 0.001;
             shipHorizontalEventKeyDown = true;
 
             var ship = gameObjects[2].renderable;
 
-            shipAcceleration = ship.accelerate(shipHorizontalAcceleration);
+            shipAcceleration = ship.accelerate(shipHorizontalAccelerationPower);
         }
     }
     else if (event.keyCode == 32) { // Space
@@ -461,7 +462,7 @@ addEventListener("keydown", function(event) {
     }
     else if (event.keyCode == 27) {
         shipRotationAcceleration = 0;
-        shipHorizontalAcceleration = 0;
+        shipHorizontalAccelerationPower = 0;
         shipAcceleration = { "x": 0, "y": 0 };
         shipRotationEventKeyDown = false;
     }
