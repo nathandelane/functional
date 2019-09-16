@@ -185,6 +185,8 @@ function Ship(g2d, centerPoint, radius, color) {
 
     ship.direction = 0;
 
+    ship.moment = { "x": 20, "y": 0 };
+
     ship.color = color;
 
     return ship;
@@ -210,11 +212,14 @@ Ship.prototype.render = function () {
     this.g2d.stroke();
 }
 
-// TODO: Determine how to translate ship in proper direction, perpendicular to tangent of
-// direction.
 Ship.prototype.translate = function (diffX, diffY) {
-    this.centerPoint.x = this.centerPoint.x + diffX;
-    this.centerPoint.y = this.centerPoint.y + diffY;
+    var newX = this.centerPoint.x + diffX;
+    var newY = this.centerPoint.y + diffY;
+
+    // console.log("oldX: " + this.centerPoint.x + ", oldY: " + this.centerPoint.y + ", newX: " + newX + ", newY: " + newY);
+
+    this.centerPoint.x = newX;
+    this.centerPoint.y = newY;
 
     if ((this.centerPoint.x - this.radius) > 640) {
         this.centerPoint.x = 0 - this.radius;
@@ -255,6 +260,25 @@ Ship.prototype.rotate = function (degrees) {
 
     this.steps = translatedPoints.slice(0);
     this.direction = translatedPoints[0];
+}
+
+Ship.prototype.accelerate = function (acceleration) {
+    var theta = this.steps[0];
+    var frontOfShipX = (this.centerPoint.x + this.radius * Math.cos(theta));
+    var frontOfShipY = (this.centerPoint.y + this.radius * Math.sin(theta));
+    var changeInX = (frontOfShipX - this.centerPoint.x);
+    var changeInY = (frontOfShipY - this.centerPoint.y);
+
+    this.moment = { "x": changeInX, "y": changeInY };
+
+    var addToX = acceleration * this.moment.x;
+    var addToY = acceleration * this.moment.y;
+
+    console.log("acceleration: " + acceleration + ", addToX: " + addToX + ", addToY: " + addToY + ", moment: (x: " + this.moment.x + ", y: " + this.moment.y);
+
+    return { "x": addToX, "y": addToY };
+
+    // this.translate(addToX, addToY);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -306,11 +330,22 @@ var shipRotationAcceleration = 0;
 var shipMaxPositiveRotationalAcceleration = 5.0;
 var shipMaxNegativeRotationalAcceleration = -5.0;
 var shipRotationalDrag = 0.01;
+var shipRotationalDragPeriod = 1000/30;
+var shipRotationEventKeyDown = false;
+
+// Horizontal model for ship
+var shipAcceleration = { "x": 0, "y": 0 };
+var shipHorizontalAcceleration = 0;
+var shipMaxHorizontalAcceleration = 5.0;
+var shipMinHorizontalAcceleration = -5.0;
+var shipHorizontalDrag = 0;
+var shipHorizontalDragPeriod = 1000/30;
+var shipHorizontalEventKeyDown = false;
+
 var lastUpdateTime = (new Date()).getTime();
 var currentUpdateTime = 0;
 var updateDelta = 0;
-var shipRotationalDragInterval = 1000/30;
-var eventRotationKeyDown = false;
+
 
 const update = () => {
     for (var i = 0; i < gameObjects.length; i++) {
@@ -324,11 +359,11 @@ const update = () => {
     }
 
     // Simulate rotational drag...hmm
-    if (!eventRotationKeyDown) {
+    if (!shipRotationEventKeyDown) {
         currentUpdateTime = (new Date()).getTime();
         updateDelta = (currentUpdateTime-lastUpdateTime);
   
-        if(updateDelta > shipRotationalDragInterval) {
+        if(updateDelta > shipRotationalDragPeriod) {
             if (shipRotationAcceleration < 0) {
                 shipRotationAcceleration += shipRotationalDrag
             }
@@ -339,7 +374,9 @@ const update = () => {
     }
 
     var ship = gameObjects[2].renderable;
+    
     ship.rotate(shipRotationAcceleration);
+    ship.translate(shipAcceleration.x, shipAcceleration.y);
 }
 
 const clearCanvas = () => {
@@ -372,11 +409,14 @@ const gameLoop = () => {
 }
 
 addEventListener("keyup", function(event) {
-    if (event.keyCode == 37) {
-        eventRotationKeyDown = false;
+    if (event.keyCode == 37) { // Left
+        shipRotationEventKeyDown = false;
     }
-    else if (event.keyCode == 39) {
-        eventRotationKeyDown = false;
+    else if (event.keyCode == 39) { // Right
+        shipRotationEventKeyDown = false;
+    }
+    else if (event.keyCode == 38) { // Up
+        shipHorizontalEventKeyDown = false;
     }
     else {
         console.log("keycode: " + event.keyCode);
@@ -384,20 +424,33 @@ addEventListener("keyup", function(event) {
 });
 
 addEventListener("keydown", function(event) {
-    if (event.keyCode == 37) {
+    if (event.keyCode == 37) { // Left
         if (shipRotationAcceleration > shipMaxNegativeRotationalAcceleration) {
             shipRotationAcceleration -= 0.2;
-            eventRotationKeyDown = true;
+            shipRotationEventKeyDown = true;
         }
     }
-    else if (event.keyCode == 39) {
+    else if (event.keyCode == 39) { // Right
         if (shipRotationAcceleration < shipMaxPositiveRotationalAcceleration) {
             shipRotationAcceleration += 0.2;
-            eventRotationKeyDown = true;
+            shipRotationEventKeyDown = true;
         }
     }
-    else if (event.keyCode = 38) {
-        var ship = gameObjects[2].renderable;
+    else if (event.keyCode == 38) { // Up
+        if (shipHorizontalAcceleration < shipMaxHorizontalAcceleration) {
+            shipHorizontalAcceleration += 0.001;
+            shipHorizontalEventKeyDown = true;
+
+            var ship = gameObjects[2].renderable;
+
+            shipAcceleration = ship.accelerate(shipHorizontalAcceleration);
+        }
+    }
+    else if (event.keyCode == 27) {
+        shipRotationAcceleration = 0;
+        shipHorizontalAcceleration = 0;
+        shipAcceleration = { "x": 0, "y": 0 };
+        shipRotationEventKeyDown = false;
     }
     else {
         console.log("keycode: " + event.keyCode);
