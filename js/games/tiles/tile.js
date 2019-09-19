@@ -12,5 +12,5 @@ function Tile() {
 }
 
 Tile.prototype.render = function (g2d, x, y) {
-    g2d.drawImage(this.image, x, y);
+    g2d.drawImage(this.image, 0, 0, 16, 16, x, y, 16, 16);
 }

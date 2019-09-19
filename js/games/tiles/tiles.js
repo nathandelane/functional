@@ -72,6 +72,6 @@ const gameLoop = () => {
 
 /////////////////////////////////////////////////////////////////////////
 // Start of application
-var game = new Game({ "width": 640, "height": 480 }, "black", 30, (1000/0.5));
+var game = new Game({ "width": 640, "height": 480 }, "black", 30, (1000/30));
 
 gameLoop();
