@@ -1,24 +1,26 @@
 Game = {
     map_grid: {
-        width:  24,
+        width: 24,
         height: 16,
         tile: {
-        width:  16,
-        height: 16
+            width: 16,
+            height: 16
         }
     },
 
-    width: function() {
+    width: function () {
         return this.map_grid.width * this.map_grid.tile.width;
     },
 
-    height: function() {
+    height: function () {
         return this.map_grid.height * this.map_grid.tile.height;
     },
 
-    start: function() {
+    start: function () {
         Crafty.init(Game.width(), Game.height());
         Crafty.background("rgb(249, 223, 125)");
-        Crafty.scene("Game");
+        Crafty.scene("Loading");
     }
 }
+
+$text_css = { "font-size": "24px", "font_family": "Arial", "color": "white", "text-align": "center" }

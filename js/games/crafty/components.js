@@ -31,21 +31,21 @@ Crafty.c("Obsticle", {
 
 Crafty.c("Tree", {
     init: function() {
-        this.requires("Obsticle, Color")
+        this.requires("Obsticle, Color, spr_tree")
             .color("rgb(20, 125, 40)");
     }
 });
 
 Crafty.c("Bush", {
     init: function() {
-        this.requires("Obsticle, Color")
+        this.requires("Obsticle, Color, spr_bush")
             .color("rgb(20, 185, 40)");
     }
 });
 
 Crafty.c("PlayerCharacter", {
     init: function() {
-        this.requires("Actor, Fourway, Color, Collision")
+        this.requires("Actor, Fourway, Color, Collision, spr_player")
             .fourway(20)
             .color("rgb(20, 75, 40)")
             .onHit("Solid", this.blockSolid)
@@ -81,7 +81,7 @@ Crafty.c("PlayerCharacter", {
 
 Crafty.c("Village", {
     init: function() {
-        this.requires("Actor, Color")
+        this.requires("Actor, Color, spr_village")
             .color("rgb(170, 125, 40)");
     },
 

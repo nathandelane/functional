@@ -70,3 +70,29 @@ Crafty.scene("Victory", function () {
 }, function () {
     this.unbind("KeyDown", this.restart_game);
 });
+
+Crafty.scene("Loading", function() {
+    Crafty.e("2D, DOM, Text")
+        .text("Loading...")
+        .attr({ x: 0, y: Game.height() / - 24, w: Game.width() })
+        .css($text_css);
+
+    var assetsObj = {
+        "sprites": {
+            "assets/16x16_forest_1.png": {
+                tile: 16,
+                tileh: 16,
+                map: {
+                    spr_tree: [0, 0],
+                    spr_bush: [1, 0],
+                    spr_village: [0, 1],
+                    spr_player: [1, 1]
+                }
+            }
+        }
+    };
+    
+    Crafty.load(assetsObj, function() {
+        Crafty.scene("Game")
+    });
+});
