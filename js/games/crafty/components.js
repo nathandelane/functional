@@ -23,16 +23,22 @@ Crafty.c("Actor", {
     }
 });
 
+Crafty.c("Obsticle", {
+    init: function() {
+        this.requires("Actor, Solid, Collision");
+    }
+});
+
 Crafty.c("Tree", {
     init: function() {
-        this.requires("Actor, Color, Solid")
+        this.requires("Obsticle, Color")
             .color("rgb(20, 125, 40)");
     }
 });
 
 Crafty.c("Bush", {
     init: function() {
-        this.requires("Actor, Color, Solid")
+        this.requires("Obsticle, Color")
             .color("rgb(20, 185, 40)");
     }
 });
@@ -42,7 +48,6 @@ Crafty.c("PlayerCharacter", {
         this.requires("Actor, Fourway, Color, Collision")
             .fourway(20)
             .color("rgb(20, 75, 40)")
-            // .stopOnSolids()
             .onHit("Solid", this.blockSolid)
             .onHit("Village", this.visitVillage)
             .bind("Moved", function(evt) {
@@ -51,25 +56,21 @@ Crafty.c("PlayerCharacter", {
             });
     },
 
-    stopOnSolids: function() {
-        this.onHit("Solid", this.stopMovement);
-
-        return this;
-    },
-
-    stopMovement: function() {
-        console.log("speed: " + this._speed + " x: " + this.x + " y: " + this.y + " movement.x:" + this._movement.x + " movement.y" + this._movement.y);
-
-        this._speed = 0;
-
-        if (this._movement) {
-            this.x -= this._movement.x;
-            this.y -= this._movement.y;
-        }
-    },
-
     blockSolid: function(data) {
-        console.log("data: " + data);
+        var hitDatas, hitData;
+
+        if ((hitDatas = this.hit("Solid"))) {
+            hitData = hitDatas[0];
+
+            if (hitData.type === "SAT") {
+                this.x -= hitData.overlap * hitData.nx;
+                this.y -= hitData.overlap * hitData.ny;
+            }
+            else {
+                this.x = data._x;
+                this.y = data._y
+            }
+        }
     },
 
     visitVillage: function(data) {
