@@ -184,20 +184,35 @@ One [[medium sized rock is on the ground|Look at Rocks][$from = &quot;All You Se
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
 
-[[View Inventory|Inventory][$from = &quot;All You See is Sand&quot;]]</tw-passagedata><tw-passagedata pid="2" name="Look at Cactus" tags="" position="178,134.5" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="3" name="Look at Rocks" tags="" position="487,337.5" size="100,100">&lt;&lt;if $rockInHand&gt;&gt;
+[[View Inventory|Inventory][$from = &quot;All You See is Sand&quot;]]</tw-passagedata><tw-passagedata pid="2" name="Look at Cactus" tags="" position="178,134.5" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="3" name="Look at Rocks" tags="" position="487,337.5" size="100,100">&lt;&lt;nobr&gt;&gt;
+	&lt;&lt;set $nothingStackedThreeOnGround = &quot;There are three rocks on the ground, each fairly circular and mostly flat, sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak.&quot;&gt;&gt;
+	&lt;&lt;set $twoStackedOneOnGround = &quot;There are two rocks stacked on top of each other on the ground, and another rock is sitting next to the stack of rocks. They look small enough that you might be able to pick each of them up easily, even though you feel weak.&quot;&gt;&gt;
+	&lt;&lt;set $threeStackedNothingOnGround = &quot;There is a short stack of three rocks on the ground. It looks small enough that you might be able to pick it up easily, even though you feel weak.&quot;&gt;&gt;
+	&lt;&lt;set $twoOnGround = &quot;There are two rocks on the ground sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak. But maybe only one at a time.&quot;&gt;&gt;
+	&lt;&lt;set $oneOnGround = &quot;There is one rock on the ground. It looks small enough that you might be able to pick it up easily, even though you feel weak.&quot;&gt;&gt;
+	&lt;&lt;set $twoStacked = &quot;There are two rocks stacked on top of each other on the ground. They look small enough that you might be able to pick each of them up easily, even though you feel weak.&quot;&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if $rockInHand&gt;&gt;
 You are holding a rock.
+&lt;&lt;elseif $stackOfRocksInHand&gt;&gt;
+You are holding a stack of rocks.
 &lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
 
 &lt;&lt;nobr&gt;&gt;
-&lt;&lt;if not $stackOfRocksInHand&gt;&gt;
-&lt;&lt;if $rocksStacked is 1&gt;&gt;
-There &lt;&lt;if ($rocksOnTheGround + $rocksStacked - 1) is 3&gt;&gt;are three rocks&lt;&lt;elseif ($rocksOnTheGround + $rocksStacked - 1) is 2&gt;&gt;are two rocks&lt;&lt;elseif ($rocksOnTheGround + $rocksStacked - 1) is 1&gt;&gt;is one rock&lt;&lt;/if&gt;&gt;, each fairly circular and mostly flat, sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak.
-&lt;&lt;elseif $rocksStacked is 2&gt;&gt;
-There are two rocks stacked on top of each other on the ground. A stack small enough that you might be able to pick it up.
-&lt;&lt;elseif $rocksStacked is 3&gt;&gt;
-There are three rocks stacked on top of each other on the ground. Even though you are weak you might be able to pick them up if you try really hard.
-&lt;&lt;else&gt;&gt;
-You are carrying a stack of rocks. &lt;&lt;if $rocksOnTheGround is 1&gt;&gt;There is another rock on the ground, small enough that you might be able to pick it up.
+&lt;&lt;if $rocksOnTheGround is 3&gt;&gt;
+	&lt;&lt;print $nothingStackedThreeOnGround&gt;&gt;
+&lt;&lt;elseif $rocksStacked is 2 &amp;&amp; not $rockInHand &amp;&amp; not $stackOfRocksInHand&gt;&gt;
+	&lt;&lt;print $twoStackedOneOnGround&gt;&gt;
+&lt;&lt;elseif $rocksStacked is 3 &amp;&amp; not $rockInHand &amp;&amp; not $stackOfRocksInHand&gt;&gt;
+	&lt;&lt;print $threeStackedNothingOnGround&gt;&gt;
+&lt;&lt;elseif $rocksStacked is 1 &amp;&amp; $rockInHand &amp;&amp; not $stackOfRocksInHand&gt;&gt;
+	&lt;&lt;print $twoOnGround&gt;&gt;
+&lt;&lt;elseif $rocksStacked is 2 &amp;&amp; not $rockInHand &amp;&amp; $stackOfRocksInHand&gt;&gt;
+	&lt;&lt;print $oneOnGround&gt;&gt;
+&lt;&lt;elseif $rocksStacked is 2 &amp;&amp; $rockInHand&gt;&gt;
+	&lt;&lt;print $twoStacked&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
 
