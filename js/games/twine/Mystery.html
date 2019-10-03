@@ -100,10 +100,69 @@ var saveAs=saveAs||navigator.msSaveBlob&&navigator.msSaveBlob.bind(navigator)||f
 		<div id="init-lacking">Your browser lacks required capabilities. Please upgrade it or switch to another to continue.</div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="Mystery" startnode="1" creator="Twine" creator-version="2.3.4" ifid="7B93C7A6-342A-481E-A8E6-04E545F8E45F" zoom="1" format="SugarCube" format-version="2.29.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="All You See is Sand" tags="" position="412,187.5" size="100,100">&lt;&lt;set $rocksOnTheGround = 3&gt;&gt;
-&lt;&lt;set $rockInHand = false&gt;&gt;
-&lt;&lt;set $rocksStacked = 1&gt;&gt;
+	<tw-storydata name="Mystery" startnode="1" creator="Twine" creator-version="2.3.4" ifid="7B93C7A6-342A-481E-A8E6-04E545F8E45F" zoom="0.6" format="SugarCube" format-version="2.29.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">window.pickUpRock = function() {
+	if (Wikifier.getValue("$rockInHand")) {
+		return;
+	}
+	if (Wikifier.getValue("$rocksOnTheGround") > 0) {
+		Wikifier.setValue("$rockInHand", true);
+		Wikifier.setValue("$rocksOnTheGround",  Wikifier.getValue("$rocksOnTheGround") - 1);
+	}
+};
 
+window.putRockOnGround = function() {
+	if (!Wikifier.getValue("$rockInHand")) {
+		return;
+	}
+	Wikifier.setValue("$rockInHand", false);
+		Wikifier.setValue("$rocksOnTheGround",  Wikifier.getValue("$rocksOnTheGround") + 1);
+};
+
+window.stackARockOnTopOfAnother = function() {
+	if (Wikifier.getValue("$rocksStacked") == 3) {
+		return;
+	}
+	Wikifier.setValue("$rocksStacked", Wikifier.getValue("$rocksStacked") + 1);
+  Wikifier.setValue("$rockInHand", false);
+};
+
+window.removeARockFromTheStack = function() {
+	if (Wikifier.getValue("$rocksStacked") == 1) {
+		return;
+	}
+	Wikifier.setValue("$rocksStacked", Wikifier.getValue("$rocksStacked") - 1);
+	Wikifier.setValue("$rockInHand", true);
+};
+
+window.pickUpStackOfRocks = function() {
+	if (Wikifier.getValue("$rocksStacked") == 1) {
+		return;
+	}
+	Wikifier.setValue("$stackOfRocksInHand", true);
+	Wikifier.setValue("$previousRocksOnGround", Wikifier.getValue("$rocksOnTheGround"));
+	Wikifier.setValue("$rocksOnTheGround", 0);
+};
+
+window.putStackOfRocksOnTheGround = function() {
+	if (!Wikifier.getValue("$stackOfRocksInHand")) {
+		return;
+	}
+	Wikifier.setValue("$stackOfRocksInHand", false);
+	Wikifier.setValue("$rocksOnTheGround", Wikifier.getValue("$previousRocksOnGround"));
+};</script><tw-passagedata pid="1" name="All You See is Sand" tags="" position="412,187.5" size="100,100">&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if ndef $rocksOnTheGround&gt;&gt;
+	&lt;&lt;set $rocksOnTheGround = 3&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ndef $rocksStacked&gt;&gt;
+	&lt;&lt;set $rocksStacked = 1&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ndef $rockInHand&gt;&gt;
+	&lt;&lt;set $rockInHand = false&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if ndef $stackOfRocksInHand&gt;&gt;
+	&lt;&lt;set $stackOfRocksInHand = false&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
 Deserted in the blinding white of an unknown, wasted land, nearly all you see in all directions is sky and [[sand|Sand]].
 
 A strong breeze throws [[small whirly clouds of sand|Whirly Clouds]] around, which grate against your skin.
@@ -112,50 +171,61 @@ And your head pounds in your ears as the sun beats on your sweat-drenched body.
 
 Near where you lay is a small plant with large flat and spiny leaves - [[a cactus|Look at Cactus]].
 
-A [[few medium sized rocks|Look at Rocks][$from = &quot;All You See is Sand&quot;]], which you could probably throw some distance, even in your wearied state.
-
-[[View Inventory|Inventory][$from = &quot;All You See is Sand&quot;]]</tw-passagedata><tw-passagedata pid="2" name="Look at Cactus" tags="" position="178,134.5" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="3" name="Look at Rocks" tags="" position="487,337.5" size="100,100">&lt;&lt;nobr&gt;&gt;
-&lt;div&gt;
-&lt;&lt;print &quot;Rocks on the ground: &quot; + $rocksOnTheGround&gt;&gt;&lt;br/&gt;
-&lt;&lt;print &quot;Rocks stacked: &quot; + $rocksStacked&gt;&gt;&lt;br/&gt;
-&lt;&lt;print &quot;Rock in hand: &quot; + $rockInHand&gt;&gt;&lt;br/&gt;
-&lt;/div&gt;
-
-&lt;&lt;if $rockInHand &amp;&amp; $rocksStacked lt 3&gt;&gt;
-You are carrying a rock.
-&lt;&lt;elseif $rocksStacked eq 3 &amp;&amp; $rockInHand&gt;&gt;
-You are carrying a stack of rocks.
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if $rockInHand&gt;&gt;You are holding a rock.
+&lt;&lt;elseif $stackOfRocksInHand&gt;&gt;You are carrying a stack of rocks. There is [[another rock on the ground|Look at Rocks][$from = &quot;All You See is Sand&quot;]], which you might be able to stack on top of the others.
 &lt;&lt;/if&gt;&gt;
-
-&lt;&lt;if $rocksOnTheGround eq 3&gt;&gt;
-There are three rocks, each fairly circular and mostly flat, sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak.
-&lt;&lt;elseif $rocksOnTheGround eq 2&gt;&gt;
-There are two rocks, each fairly circular and mostly flat, sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak.
-&lt;&lt;elseif $rocksOnTheGround eq 1&gt;&gt;
-There is one rock on the ground, fairly circular and mostly flat. It looks small enough that you might be able to pick it up easily, even though you feel weak.
-&lt;&lt;/if&gt;&gt;
-
-&lt;&lt;if $rocksStacked eq 2&gt;&gt;
-There are two rocks stack on top of each other.
-&lt;&lt;elseif $rocksStacked eq 3&gt;&gt;
-There are three rocks stacked neatly on top of each other.
-&lt;&lt;/if&gt;&gt;
-
-&lt;&lt;/nobr&gt;&gt;
-What would you like to do?&lt;br/&gt; &lt;&lt;nobr&gt;&gt;
-
-&lt;&lt;if $rockInHand&gt;&gt;
-[[put down the rock|Look at Rocks][$rockInHand = false, $rocksOnTheGround += 1]] you are carrying&lt;br/&gt;
-&lt;&lt;elseif $rocksOnTheGround gt 0&gt;&gt;
-[[pick a rock up|Look at Rocks][$rockInHand = true, $rocksOnTheGround -= 1]]&lt;br/&gt;
-&lt;&lt;/if&gt;&gt;
-
+&lt;&lt;if $rocksOnTheGround gt 1&gt;&gt;
+A [[few medium sized rocks|Look at Rocks][$from = &quot;All You See is Sand&quot;]], which you could probably throw some distance, even in your weakened state.
+&lt;&lt;elseif $rocksOnTheGround is 1&gt;&gt;
 &lt;&lt;if $rocksStacked lt 3&gt;&gt;
-[[stack one on top of another|Look at Rocks][$rocksStacked += 1, $rockInHand = false]]&lt;br/&gt;
+One [[medium sized rock is on the ground|Look at Rocks][$from = &quot;All You See is Sand&quot;]], which you could probably throw some distance, even in your weakened state.
 &lt;&lt;/if&gt;&gt;
-&lt;&lt;if $rocksStacked eq 3&gt;&gt;
-[[pick a rock up|Look at Rocks][$rockInHand = true, $rocksStacked -= 1]]&lt;br/&gt;
-[[pick up stack of rocks|Look at Rocks][$rockInHand = true, $rocksOnTheGround -= $rocksStacked]]&lt;br/&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+
+[[View Inventory|Inventory][$from = &quot;All You See is Sand&quot;]]</tw-passagedata><tw-passagedata pid="2" name="Look at Cactus" tags="" position="178,134.5" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="3" name="Look at Rocks" tags="" position="487,337.5" size="100,100">&lt;&lt;if $rockInHand&gt;&gt;
+You are holding a rock.
+&lt;&lt;/if&gt;&gt;
+
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if not $stackOfRocksInHand&gt;&gt;
+&lt;&lt;if $rocksStacked is 1&gt;&gt;
+There &lt;&lt;if ($rocksOnTheGround + $rocksStacked - 1) is 3&gt;&gt;are three rocks&lt;&lt;elseif ($rocksOnTheGround + $rocksStacked - 1) is 2&gt;&gt;are two rocks&lt;&lt;elseif ($rocksOnTheGround + $rocksStacked - 1) is 1&gt;&gt;is one rock&lt;&lt;/if&gt;&gt;, each fairly circular and mostly flat, sitting next to each other. They look small enough that you might be able to pick each of them up easily, even though you feel weak.
+&lt;&lt;elseif $rocksStacked is 2&gt;&gt;
+There are two rocks stacked on top of each other on the ground. A stack small enough that you might be able to pick it up.
+&lt;&lt;elseif $rocksStacked is 3&gt;&gt;
+There are three rocks stacked on top of each other on the ground. Even though you are weak you might be able to pick them up if you try really hard.
+&lt;&lt;else&gt;&gt;
+You are carrying a stack of rocks. &lt;&lt;if $rocksOnTheGround is 1&gt;&gt;There is another rock on the ground, small enough that you might be able to pick it up.
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/nobr&gt;&gt;
+
+What would you like to do?
+
+&lt;&lt;nobr&gt;&gt;
+&lt;&lt;if not $stackOfRocksInHand&gt;&gt;
+&lt;&lt;if $rockInHand&gt;&gt;
+&lt;&lt;link &quot;Put rock on the ground&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;putRockOnGround();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;elseif $rocksStacked lt 3&gt;&gt;
+&lt;&lt;link &quot;Pick up a rock&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;pickUpRock();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $rockInHand || $rocksOnGround gt 0&gt;&gt;
+&lt;br/&gt;
+&lt;&lt;link &quot;Stack a rock on top of another&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;stackARockOnTopOfAnother();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $rocksStacked gt 1 &amp;&amp; not $stackOfRocksInHand &amp;&amp; not $rockInHand&gt;&gt;
+&lt;br/&gt;
+&lt;&lt;link &quot;Pick up stack of rocks&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;pickUpStackOfRocks();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $rocksStacked gt 1 &amp;&amp; not $stackOfRocksInHand &amp;&amp; not $rockInHand&gt;&gt;
+&lt;br/&gt;
+&lt;&lt;link &quot;Take a rock from the stack&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;removeARockFromTheStack();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $stackOfRocksInHand&gt;&gt;
+&lt;br/&gt;
+&lt;&lt;link &quot;Put stack of rocks on the ground&quot; &quot;Look at Rocks&quot;&gt;&gt;&lt;&lt;script&gt;&gt;putStackOfRocksOnTheGround();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;/nobr&gt;&gt;
 
