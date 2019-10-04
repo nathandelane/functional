@@ -18,11 +18,115 @@
                 border: 1px solid black;
                 border-radius: 10px;
             }
+
+            #questions {
+                width: 760px;
+                padding: 10px;
+                overflow: hidden;
+                background-color: gray;
+                border-radius: 8px;
+            }
+
+            #remaining {
+                width: 70px;
+                display: block;
+                float: left;
+                overflow: hidden;
+                font-size: 40pt;
+                text-align: center;
+                background-color: white;
+                border-radius: 5px;
+            }
+
+            #nextQuestion {
+                width: 670px;
+                display: block;
+                float: left;
+                float: left;
+                margin: 0 0 0 10px;
+                padding: 10px 5px;
+                background-color: lightgray;
+                border-radius: 5px;
+            }
+
+            .answerButton {
+                display: block;
+                float: right;
+                padding: 5px;
+                margin: 2px;
+                color: white;
+                text-decoration: none;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+
+            #buttons {
+                width: 780px;
+                overflow: hidden;
+            }
+
+            #noButton {
+                background-color: darkred;
+            }
+
+            #yesButton {
+                background-color: darkgreen;
+            }
+
+            #responses {
+                border-top: 1px solid gray;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
         </style>
     </head>
     <body>
         <div class="center-div">
             <h1>20 Questions</h1>
+            <div id="questions">
+                <span id="remaining">20</span>
+                <span id="nextQuestion">...</span>
+            </div>
+            <div id="buttons">
+                <a class="answerButton" id="noButton" href="#">No</a>
+                <a class="answerButton" id="yesButton" href="#">Yes</a>
+            </div>
+            <div id="responses"></div>
         </div>
+        <script type="text/javascript">
+            var numberOfResponses = 0;
+
+            function appendAnswer(answerNumber, answer) {
+                var responseElement = document.createElement("div");
+                var text = document.createTextNode(answerNumber + ". " + answer + ": " + document.getElementById("nextQuestion").innerText);
+                responseElement.appendChild(text);
+
+                var previousAnswer = document.getElementById("responses")
+                    .children[0];
+                
+                if (!previousAnswer) {
+                    document.getElementById("responses").appendChild(responseElement);
+                }
+                else {
+                    document.getElementById("responses").insertBefore(responseElement, previousAnswer);
+                }
+
+                return true;
+            }
+
+            window.onload = function() { 
+                document.getElementById("yesButton").onclick = function() {
+                    numberOfResponses += 1;
+
+                    return appendAnswer(numberOfResponses, "Yes");
+                };
+                document.getElementById("noButton").onclick = function() {
+                    numberOfResponses += 1;
+
+                    return appendAnswer(numberOfResponses, "No");
+                };
+            };
+        </script>
     </body>
 </html>
