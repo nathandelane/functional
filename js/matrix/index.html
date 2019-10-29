@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Matrix Stuff</title>
+    <style type="text/css" media="screen">
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script type="text/javascript">
+      var matrix = [ [ 1, 2, 3, 4 ], [5, 6, 7, 8], [ 9, 10, 11, 12 ] ];
+
+      const numberOfLoops = function (arr) {
+        if (arr) {
+          var minDim = Math.min(arr.length, arr[0].length);
+            
+          return Math.floor(minDim / 2) + (minDim % 2);
+        }
+        
+        return 1;
+      }
+
+      const loopWidth = function (arr, loopNumber) {
+        return arr[0].length - (2 * loopNumber);
+      }
+
+      const loopHeight = function (arr, loopNumber) {
+        return arr.length - (2 * loopNumber);
+      }
+
+      const lpad = function (str, num) {
+        var padStr = "";
+
+        for (var i = 0; i < num; i++) {
+          padStr += " ";
+        }
+
+        return (padStr + str).slice(num * -1);
+      }
+
+      const matrixAsString = function (arr) {
+        var str = "";
+
+        for (var row = 0; row < arr.length; row++) {
+          for (var col = 0; col < arr[0].length; col++) {
+            str += lpad("" + arr[row][col], 2) + " ";
+          }
+
+          str += "\n";
+        }
+
+        return str;
+      }
+
+      const unwrapLoop = function (arr, loopNumber) {
+        var loop = [];
+
+        if (loopWidth(arr, loopNumber) == 1) {
+          for (var i = loopNumber; i < (loopNumber + loopHeight(arr, loopNumber) - 1); i++) {
+            loop.push(arr[i][loopNumber]);
+          }
+        }
+        else if (loopHeight(arr, loopNumber) == 1) {
+          for (var j = loopNumber; j < (loopNumber + loopWidth(arr, loopNumber)); j++) {
+            loop.push(arr[loopNumber][j]);
+          }
+        }
+        else { // (loopHeight(arr, loopNumber) > 1 && loopWidth(arr, loopNumber))
+          // Top
+          for (var j = loopNumber; j < (loopNumber + loopWidth(arr, loopNumber)); j++) {
+            loop.push(arr[loopNumber][j]);
+          }
+
+          // Right
+          for (var i = loopNumber + 1; i < (loopNumber + loopHeight(arr, loopNumber) - 1); i++) {
+            loop.push(arr[i][loopWidth(arr, loopNumber) - 1]);
+          }
+
+          // Bottom
+          for (var j = (loopNumber + loopWidth(arr, loopNumber) - 1); j >= loopNumber ; j--) {
+            loop.push(arr[(loopHeight(arr, loopNumber) - 1)][j]);
+          }
+
+          // Left
+          for (var i = (loopNumber + loopHeight(arr, loopNumber) - 2); i > loopNumber; i--) {
+            loop.push(arr[i][loopNumber]);
+          }
+        }
+
+        return loop;
+      }
+
+      const shiftLoop = function (loop, num) {
+        var newLoop = [];
+
+        for (var i = 0; i < loop.length; i++) {
+          var nextI = i + num;
+
+          if (nextI >= loop.length) {
+            var diff = (nextI - loop.length)
+
+            nextI = diff;
+          }
+          else if (nextI < 0) {
+            var diff = (loop.length + nextI)
+
+            nextI = diff;
+          }
+
+          newLoop[nextI] = loop[i];
+        }
+
+        return newLoop;
+      }
+
+    </script>
+  </body>
+</html>

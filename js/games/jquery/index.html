@@ -74,6 +74,10 @@
                 background-color: darkgreen;
             }
 
+            #iDontKnowButton {
+                background-color: black;
+            }
+
             #responses {
                 border-top: 1px solid gray;
                 margin-top: 10px;
@@ -89,6 +93,7 @@
                 <span id="nextQuestion">...</span>
             </div>
             <div id="buttons">
+                <a class="answerButton" id="iDontKnowButton" href="#">I Don't Know</a>
                 <a class="answerButton" id="noButton" href="#">No</a>
                 <a class="answerButton" id="yesButton" href="#">Yes</a>
             </div>
@@ -115,16 +120,29 @@
                 return true;
             }
 
+            function updateRemaining() {
+                var numberOfQuestionsLeft = (20 - numberOfResponses);
+
+                document.getElementById("remaining").innerHTML = numberOfQuestionsLeft;
+            }
+
             window.onload = function() { 
                 document.getElementById("yesButton").onclick = function() {
                     numberOfResponses += 1;
+
+                    updateRemaining();
 
                     return appendAnswer(numberOfResponses, "Yes");
                 };
                 document.getElementById("noButton").onclick = function() {
                     numberOfResponses += 1;
 
+                    updateRemaining();
+
                     return appendAnswer(numberOfResponses, "No");
+                };
+                document.getElementById("iDontKnowButton").onclick = function() {
+                    return appendAnswer("--", "I Don't Know");
                 };
             };
         </script>
