@@ -21,9 +21,9 @@
     <script type="text/javascript">
       var matrix = [ [ 1, 2, 3, 4 ], [5, 6, 7, 8], [ 9, 10, 11, 12 ] ];
 
-      const numberOfLoops = function (arr) {
-        if (arr) {
-          var minDim = Math.min(arr.length, arr[0].length);
+      const numberOfLoops = function (matrix) {
+        if (matrix) {
+          var minDim = Math.min(matrix.length, matrix[0].length);
             
           return Math.floor(minDim / 2) + (minDim % 2);
         }
@@ -31,12 +31,12 @@
         return 1;
       }
 
-      const loopWidth = function (arr, loopNumber) {
-        return arr[0].length - (2 * loopNumber);
+      const loopWidth = function (matrix, loopNumber) {
+        return matrix[0].length - (2 * loopNumber);
       }
 
-      const loopHeight = function (arr, loopNumber) {
-        return arr.length - (2 * loopNumber);
+      const loopHeight = function (matrix, loopNumber) {
+        return matrix.length - (2 * loopNumber);
       }
 
       const lpad = function (str, num) {
@@ -49,12 +49,12 @@
         return (padStr + str).slice(num * -1);
       }
 
-      const matrixAsString = function (arr) {
+      const matrixAsString = function (matrix) {
         var str = "";
 
-        for (var row = 0; row < arr.length; row++) {
-          for (var col = 0; col < arr[0].length; col++) {
-            str += lpad("" + arr[row][col], 2) + " ";
+        for (var row = 0; row < matrix.length; row++) {
+          for (var col = 0; col < matrix[0].length; col++) {
+            str += lpad("" + matrix[row][col], 2) + " ";
           }
 
           str += "\n";
@@ -63,42 +63,79 @@
         return str;
       }
 
-      const unwrapLoop = function (arr, loopNumber) {
+      const unwrapLoop = function (matrix, loopNumber) {
         var loop = [];
 
-        if (loopWidth(arr, loopNumber) == 1) {
-          for (var i = loopNumber; i < (loopNumber + loopHeight(arr, loopNumber) - 1); i++) {
-            loop.push(arr[i][loopNumber]);
+        if (loopWidth(matrix, loopNumber) == 1) {
+          for (var i = loopNumber; i < (loopNumber + loopHeight(matrix, loopNumber) - 1); i++) {
+            loop.push(matrix[i][loopNumber]);
           }
         }
-        else if (loopHeight(arr, loopNumber) == 1) {
-          for (var j = loopNumber; j < (loopNumber + loopWidth(arr, loopNumber)); j++) {
-            loop.push(arr[loopNumber][j]);
+        else if (loopHeight(matrix, loopNumber) == 1) {
+          for (var j = loopNumber; j < (loopNumber + loopWidth(matrix, loopNumber)); j++) {
+            loop.push(matrix[loopNumber][j]);
           }
         }
-        else { // (loopHeight(arr, loopNumber) > 1 && loopWidth(arr, loopNumber))
+        else {
           // Top
-          for (var j = loopNumber; j < (loopNumber + loopWidth(arr, loopNumber)); j++) {
-            loop.push(arr[loopNumber][j]);
+          for (var j = loopNumber; j < (loopNumber + loopWidth(matrix, loopNumber)); j++) {
+            loop.push(matrix[loopNumber][j]);
           }
 
           // Right
-          for (var i = loopNumber + 1; i < (loopNumber + loopHeight(arr, loopNumber) - 1); i++) {
-            loop.push(arr[i][loopWidth(arr, loopNumber) - 1]);
+          for (var i = loopNumber + 1; i < (loopNumber + loopHeight(matrix, loopNumber) - 1); i++) {
+            loop.push(matrix[i][loopWidth(matrix, loopNumber) - 1]);
           }
 
           // Bottom
-          for (var j = (loopNumber + loopWidth(arr, loopNumber) - 1); j >= loopNumber ; j--) {
-            loop.push(arr[(loopHeight(arr, loopNumber) - 1)][j]);
+          for (var j = (loopNumber + loopWidth(matrix, loopNumber) - 1); j >= loopNumber ; j--) {
+            loop.push(matrix[(loopHeight(matrix, loopNumber) - 1)][j]);
           }
 
           // Left
-          for (var i = (loopNumber + loopHeight(arr, loopNumber) - 2); i > loopNumber; i--) {
-            loop.push(arr[i][loopNumber]);
+          for (var i = (loopNumber + loopHeight(matrix, loopNumber) - 2); i > loopNumber; i--) {
+            loop.push(matrix[i][loopNumber]);
           }
         }
 
         return loop;
+      }
+
+      const wrapLoop = function (matrix, loop, loopNumber) {
+        if (loopWidth(matrix, loopNumber) == 1) {
+          for (var i = loopNumber, j = 0; i < (loopNumber + loopHeight(matrix, loopNumber) - 1); i++, j++) {
+            matrix[i][loopNumber] = loop[j];
+          }
+        }
+        else if (loopHeight(matrix, loopNumber) == 1) {
+          for (var j = loopNumber, i = 0; j < (loopNumber + loopWidth(matrix, loopNumber)); j++, i++) {
+            matrix[loopNumber][j] = loop[i];
+          }
+        }
+        else {
+          var s = 0;
+          // Top
+          for (var j = loopNumber; j < (loopNumber + loopWidth(matrix, loopNumber)); j++, s++) {
+            matrix[loopNumber][j] = loop[s];
+          }
+
+          // Right
+          for (var i = loopNumber + 1; i < (loopNumber + loopHeight(matrix, loopNumber) - 1); i++, s++) {
+            matrix[i][loopWidth(matrix, loopNumber) - 1] = loop[s];
+          }
+
+          // Bottom
+          for (var j = (loopNumber + loopWidth(matrix, loopNumber) - 1); j >= loopNumber ; j--, s++) {
+            matrix[(loopHeight(matrix, loopNumber) - 1)][j] = loop[s];
+          }
+
+          // Left
+          for (var i = (loopNumber + loopHeight(matrix, loopNumber) - 2); i > loopNumber; i--, s++) {
+            matrix[i][loopNumber] = loop[s];
+          }
+        }
+
+        return matrix;
       }
 
       const shiftLoop = function (loop, num) {
