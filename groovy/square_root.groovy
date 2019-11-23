@@ -1,22 +1,22 @@
-def square(BigDecimal x) { x * x }
+def square(def x) { x * x }
 
 def average(def x, def y) { ((x + y) / 2) }
 
-def abs(BigDecimal x) { Math.abs(x) }
+def abs(def x) { Math.abs(x) }
 
-def good_enough(BigDecimal guess, BigDecimal x) {
+def good_enough(def guess, def x) {
     abs(square(guess) - x) < 0.001
 }
 
-def improve(BigDecimal guess, BigDecimal x) { average(guess, (x / guess)) }
+def improve(def guess, def x) { average(guess, (x / guess)) }
 
-def sqrt_iter(BigDecimal guess, BigDecimal x) {
+def sqrt_iter(def guess, def x) {
     if(good_enough(guess, x))
         guess
     else
         sqrt_iter(improve(guess, x), x)
 }
 
-def sqrt = { sqrt_iter(1.0, it) }
+def sqrt(def x) { sqrt_iter(1.0, x) }
 
 sqrt(9.0)
