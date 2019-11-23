@@ -1,3 +1,7 @@
 [JAVA]
 
 *.class
+
+
+
+.DS_Store
