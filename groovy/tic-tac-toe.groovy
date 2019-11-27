@@ -13,11 +13,11 @@ class Board {
 
 def drawBoard(def boardArray) {
     println "  A   B   C"
-    println "A ${boardArray[0][0]} | ${boardArray[0][1]} | ${boardArray[0][2]}"
-    println "  ---------"
-    println "B ${boardArray[1][0]} | ${boardArray[1][1]} | ${boardArray[1][2]}"
-    println "  ---------"
-    println "C ${boardArray[2][0]} | ${boardArray[2][1]} | ${boardArray[2][2]}"
+    println "A ${boardArray[0][0]} │ ${boardArray[0][1]} │ ${boardArray[0][2]}"
+    println "────┼───┼───"
+    println "B ${boardArray[1][0]} │ ${boardArray[1][1]} │ ${boardArray[1][2]}"
+    println "────┼───┼───"
+    println "C ${boardArray[2][0]} │ ${boardArray[2][1]} │ ${boardArray[2][2]}"
 }
 
 def convertToNumeric(def alpha) {
