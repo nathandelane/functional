@@ -30,17 +30,26 @@ def convertToNumeric(def alpha) {
     else if (alpha == 'C' || alpha == 'c') {
         2
     }
+    else {
+        -1
+    }
 }
 
 def applyMove(def boardArray, def userToken, def row, def column) {
     def numericRow = convertToNumeric row
     def numericColumn = convertToNumeric column
 
-    if (boardArray[numericRow][numericColumn] == ' ') {
-        boardArray[numericRow][numericColumn] = userToken
+    if (numericRow < 0 || numericColumn < 0) {
+        println "Error: there is no space identified by row ${row} and column ${column}"
+        null
     }
     else {
-        null
+        if (boardArray[numericRow][numericColumn] == ' ') {
+            boardArray[numericRow][numericColumn] = userToken
+        }
+        else {
+            boardArray[numericRow][numericColumn]
+        }
     }
 }
 
@@ -70,15 +79,16 @@ def currentUser = 'X'
 while(true) {
     drawBoard(board.boardArray)
 
-    def userInput = g.gets "Enter a coordinate ${currentUser} (<row> <col>, q to exit): "
+    def userInput = g.gets "\nEnter a coordinate ${currentUser} (<row> <col>, q to exit): "
 
     if (userInput == "q") {
         break;
     }
     else {
         def rowAndCol = userInput.split " "
+        def result = applyMove(board.boardArray, currentUser, rowAndCol[0], rowAndCol[1])
 
-        if (applyMove(board.boardArray, currentUser, rowAndCol[0], rowAndCol[1])) {
+        if (result == currentUser) {
             if (!isCurrentUserWinner(currentUser, board.boardArray)) {
                 currentUser = swapUser currentUser
             }
@@ -88,7 +98,7 @@ while(true) {
                 break
             }
         }
-        else {
+        else if (result) {
             println "That space is already taken"
         }
     }
